@@ -7,7 +7,7 @@ public class Agenda {
 	// Método para limpiar la consola
 
 	public static void clean() {
-		for (int i = 0; i < 31; i++) {
+		for (int i = 0; i < 39; i++) {
 			System.out.println();
 		}
 	}
@@ -16,12 +16,15 @@ public class Agenda {
 
 	public static void enterParaContinuar() {
 		String seguir = "";
+
 		Scanner leer = new Scanner(System.in);
 
 		System.out.println("Pulse Enter para continuar...");
 		try {
 			seguir = leer.nextLine();
-		} catch (Exception e) {
+
+		} catch (Exception error) {
+
 		}
 	}
 
@@ -100,37 +103,38 @@ public class Agenda {
 	public static void guardarContacto(String mGuardar[][]) {
 		Scanner leer = new Scanner(System.in);
 		String guardarOtro = "";
+		boolean fallo = false;
 
-		clean();
-
-		for (int i = 0; i < mGuardar.length; i++) {
-			if ((mGuardar[i][0].equalsIgnoreCase("Vacío")) && (mGuardar[i][1].equalsIgnoreCase("Vacío"))) {
-				System.out.println("Introduce nombre del contacto:");
-				mGuardar[i][0] = leer.nextLine();
-				System.out.println("Introduce teléfono del contacto:");
-				mGuardar[i][1] = leer.nextLine();
-				clean();
-				System.out.println("¡Contacto guardado con éxito!");
-				enterParaContinuar();
-				break;
-			}
-		}
 		do {
-			clean();
-			System.out.println("¿Quiere guardar otro contacto? (S/N)");
-			guardarOtro = leer.nextLine();
-			guardarOtro.toUpperCase();
 
-			if (guardarOtro.equalsIgnoreCase("S")) {
-				guardarContacto(mGuardar);
+			clean();
+
+			for (int i = 0; i < mGuardar.length; i++) {
+				if ((mGuardar[i][0].equalsIgnoreCase("Vacío")) && (mGuardar[i][1].equalsIgnoreCase("Vacío"))) {
+					System.out.println("Introduce nombre del contacto:");
+					mGuardar[i][0] = leer.nextLine();
+					System.out.println("Introduce teléfono del contacto:");
+					mGuardar[i][1] = leer.nextLine();
+					clean();
+					System.out.println("¡Contacto guardado con éxito!");
+					enterParaContinuar();
+					break;
+				}
 			}
-			if ((!guardarOtro.equalsIgnoreCase("S") && (!guardarOtro.equalsIgnoreCase("N")))) {
-				System.err.println("El dato introducido no es correcto. Introduzca S o N");
-			}
-			if (guardarOtro.equalsIgnoreCase("N")) {
-				break;
-			}
-		} while ((!guardarOtro.equalsIgnoreCase("S") || (!guardarOtro.equalsIgnoreCase("N"))));
+
+			do {
+				fallo = false;
+				clean();
+				System.out.println("¿Quiere guardar otro contacto? (S/N)");
+				guardarOtro = leer.nextLine().toUpperCase();
+
+				if ((!guardarOtro.equalsIgnoreCase("S") && (!guardarOtro.equalsIgnoreCase("N")))) {
+					System.err.println("El dato introducido no es correcto. Introduzca S o N");
+					fallo = true;
+				}
+			} while (fallo);
+
+		} while (guardarOtro.equalsIgnoreCase("S"));
 	}
 
 	// Método para borrar contactos, listando primero agenda para comodidad del
@@ -244,6 +248,7 @@ public class Agenda {
 
 	public static void main(String[] args) {
 		String mContactos[][] = new String[10][2];
+		boolean seguir = true;
 
 		agendaVacia(mContactos);
 
@@ -269,9 +274,10 @@ public class Agenda {
 				break;
 			case 0:
 				apagar();
+				seguir = false;
 			default:
 				System.err.println("Inserte un dato válido.");
 			}
-		} while (true);
+		} while (seguir);
 	}
 }
